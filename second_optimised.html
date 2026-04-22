@@ -564,6 +564,8 @@ function launchConfetti() {
   confettiActive = true;
 }
 
+setInterval(launchConfetti,2000)
+
 /* ── DRAW BALLOON on canvas ── */
 function drawBalloon(b) {
   ctx.save();
