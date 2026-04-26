@@ -29,6 +29,7 @@ if (isPage1) {
     "But honestly, it feels like I’ve truly started knowing you in the last 6–8 months ✨",
     "Especially that courageous and ambitious girl…",
     "That overthinking girl…",
+    "That emotional girl...😢😊",
     "That cute, angry-bird kind of anger 😂😂❤️",
     "And so many little things that make you… you 💖",
     "I may not say it often…",
