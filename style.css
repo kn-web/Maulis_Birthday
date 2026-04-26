@@ -61,7 +61,8 @@ canvas {
   justify-content: center;
   height: 100vh;
   padding: 24px;
-  gap: 48px;
+  /* gap: 48px; */
+  gap: 30px;
 }
 
 .message-wrap {

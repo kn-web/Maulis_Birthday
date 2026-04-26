@@ -43,6 +43,7 @@ if (isPage1) {
   const textEl = document.getElementById('message-text');
   const cursorEl = document.getElementById('cursor');
   const btnEl = document.getElementById('continue-btn');
+  const readAgainBtn = document.getElementById('read-again-btn');
 
   let msgIndex = 0;
   let charIndex = 0;
@@ -70,6 +71,7 @@ if (isPage1) {
           setTimeout(() => {
             cursorEl.style.display = 'none';
             btnEl.classList.add('visible');
+            readAgainBtn.classList.add('visible');  
           }, 900);
           return; // stop
         }
@@ -276,4 +278,8 @@ if (isPage2) {
 
   // Auto-launch after page reveals
   setTimeout(launchConfetti, 700);
+}
+
+function reloadPage() {
+  window.location.reload();
 }
