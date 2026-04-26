@@ -238,12 +238,16 @@
     /* Crown: transform only — NO top animation (kills layout) */
     .crown-on-text {
       position: absolute;
-      top: -15px;
-      left: 40px;
-      font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+      /* top: -15px;
+      left: 40px; */
+      top: -4px;
+      left: 60px;
+      /* font-size: clamp(1.5rem, 3.5vw, 2.2rem); */
+      font-size: clamp(1.5rem, 3.5vw, 1.5rem);
       line-height: 1;
       display: inline-block;
-      animation: crownWobble 4s ease-in-out infinite;
+      /* animation: crownWobble 4s ease-in-out infinite; */
+      animation: crownBounce 1.8s ease-in-out infinite;
       will-change: transform;
       filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.8));
       z-index: 5;
@@ -612,16 +616,16 @@
       .crown-on-text {
         font-size: 1.4rem;
         top: -4px;
-        left: 50px;
+        left: 60px;
       }
 
-      .prayersection {
-        font-family: 'Yatra One', cursive !important;
-        font-size: clamp(0.95rem, 2.2vw, 1.18rem) !important;
-        color: rgba(255, 224, 240, 0.88) !important;
-        line-height: 2 !important;
-        font-weight: 500 !important;
-      }
+    }
+    .prayersection {
+      font-family: 'Yatra One', cursive !important;
+      font-size: clamp(0.95rem, 2.2vw, 1.18rem) !important;
+      color: rgba(255, 224, 240, 0.88) !important;
+      line-height: 2 !important;
+      font-weight: 500 !important;
     }
   </style>
 </head>
