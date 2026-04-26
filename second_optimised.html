@@ -1,754 +1,1066 @@
 <!DOCTYPE html>
 <html lang="hi">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>जन्मदिन मुबारक हो! 🎂</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700;900&family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday 🎂</title>
+  <link href="https://fonts.googleapis.com/css2?family=Yatra+One&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700;900&family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;600&family=Poppins:wght@400;600&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-<style>
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --rose: #ff4d8d;
+      --gold: #ffd700;
+      --peach: #ffb347;
+      --lav: #c084fc;
+      --mint: #34d399;
+      --deep: #0d0118;
+    }
 
-:root {
-  --rose:  #ff4d8d;
-  --gold:  #ffd700;
-  --peach: #ffb347;
-  --lav:   #c084fc;
-  --mint:  #34d399;
-  --deep:  #0d0118;
-}
+    html,
+    body {
+      width: 100%;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background: var(--deep);
+      font-family: 'Playfair Display', serif;
+      cursor: none;
+    }
 
-html, body {
-  width: 100%; min-height: 100vh;
-  overflow-x: hidden;
-  background: var(--deep);
-  font-family: 'Playfair Display', serif;
-  cursor: none;
-}
+    /* ── STATIC BACKGROUND — no animation, pure CSS ── */
+    .bg-mesh {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 80%, rgba(225, 29, 72, 0.16) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 50% at 80% 20%, rgba(192, 132, 252, 0.13) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 55% 50%, rgba(255, 183, 71, 0.07) 0%, transparent 60%);
+      /* static — no repaint */
+    }
 
-/* ── STATIC BACKGROUND — no animation, pure CSS ── */
-.bg-mesh {
-  position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background:
-    radial-gradient(ellipse 80% 60% at 20% 80%, rgba(225,29,72,0.16) 0%, transparent 55%),
-    radial-gradient(ellipse 60% 50% at 80% 20%, rgba(192,132,252,0.13) 0%, transparent 55%),
-    radial-gradient(ellipse 50% 40% at 55% 50%, rgba(255,183,71,0.07) 0%, transparent 60%);
-  /* static — no repaint */
-}
+    /* ── CANVAS — all particles rendered here ── */
+    #particleCanvas {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      will-change: contents;
+    }
 
-/* ── CANVAS — all particles rendered here ── */
-#particleCanvas {
-  position: fixed; inset: 0; z-index: 1;
-  pointer-events: none;
-  will-change: contents;
-}
+    /* ── DUAL CURSOR — transform only, no left/top ── */
+    .cursor-dot {
+      position: fixed;
+      z-index: 9999;
+      pointer-events: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff 25%, var(--rose) 100%);
+      top: 0;
+      left: 0;
+      will-change: transform;
+      /* box-shadow removed — causes repaint on move */
+    }
 
-/* ── DUAL CURSOR — transform only, no left/top ── */
-.cursor-dot {
-  position: fixed; z-index: 9999; pointer-events: none;
-  width: 14px; height: 14px; border-radius: 50%;
-  background: radial-gradient(circle, #fff 25%, var(--rose) 100%);
-  top: 0; left: 0;
-  will-change: transform;
-  /* box-shadow removed — causes repaint on move */
-}
-.cursor-ring {
-  position: fixed; z-index: 9998; pointer-events: none;
-  width: 30px; height: 30px; border-radius: 50%;
-  border: 1.5px solid rgba(255,215,0,0.4);
-  top: 0; left: 0;
-  will-change: transform;
-  /* NO CSS transition — handled in rAF loop */
-}
+    .cursor-ring {
+      position: fixed;
+      z-index: 9998;
+      pointer-events: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255, 215, 0, 0.4);
+      top: 0;
+      left: 0;
+      will-change: transform;
+      /* NO CSS transition — handled in rAF loop */
+    }
 
-/* ── PAGE ── */
-.page {
-  position: relative; z-index: 10;
-  min-height: 100vh;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  padding: 40px 20px;
-  text-align: center;
-}
+    .img-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+    }
 
-/* ── TOP CROWN — transform only ── */
-.crown {
-  font-size: 3.8rem; margin-bottom: 10px;
-  display: inline-block;
-  animation: crownBounce 1.8s ease-in-out infinite;
-  will-change: transform;
-  /* filter removed from animation — static only */
-  filter: drop-shadow(0 0 16px #ffd700);
-}
-@keyframes crownBounce {
-  0%, 100% { transform: translateY(0) rotate(-5deg); }
-  50%       { transform: translateY(-10px) rotate(5deg); }
-}
 
-/* ── TITLE ── */
-.title-wrap { position: relative; margin-bottom: 14px; }
+    /* .circle-img {
+  width: 155px;
+  height: 155px;
+  border-radius: 50%;
+  object-fit: cover;
 
-.hb-text {
-  font-family: 'Dancing Script', cursive;
-  font-size: clamp(2.8rem, 9vw, 7rem);
-  font-weight: 700;
-  background: linear-gradient(135deg, #fff5e0, var(--gold), var(--peach), var(--rose), var(--lav), var(--gold));
-  background-size: 300% 300%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  /* single animation only */
-  animation: gradShift 4s ease infinite;
-  letter-spacing: 2px; line-height: 1.1;
-  will-change: background-position;
-}
-@keyframes gradShift {
-  0%,100% { background-position: 0% 50%; }
-  50%      { background-position: 100% 50%; }
-}
+  border: 3px solid #ffd700;
+  box-shadow:
+    0 0 12px rgba(255, 215, 0, 0.7),
+    0 0 25px rgba(255, 77, 141, 0.5);
 
-/* ── DEVANAGARI + TILTED CROWN ── */
-.deva-title-wrap {
-  position: relative;
-  display: inline-block;
-  margin-bottom: 8px;
-}
+  transition: transform 0.3s ease;
+} */
 
-/* Crown: transform only — NO top animation (kills layout) */
-.crown-on-text {
-  position: absolute;
-  top: -24px; left: -6px;
-  font-size: clamp(1.5rem, 3.5vw, 2.2rem);
-  line-height: 1;
-  display: inline-block;
-  animation: crownWobble 4s ease-in-out infinite;
-  will-change: transform;
-  filter: drop-shadow(0 0 8px rgba(255,215,0,0.8));
-  z-index: 5;
-}
-/* Only uses transform — no layout-triggering properties */
-@keyframes crownWobble {
-  0%        { transform: rotate(-22deg) translateY(0); }
-  25%       { transform: rotate(-12deg) translateY(-4px); }
-  50%       { transform: rotate(-26deg) translateY(-2px); }
-  75%       { transform: rotate(-16deg) translateY(-5px); }
-  100%      { transform: rotate(-22deg) translateY(0); }
-}
+    .img-title {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-.deva-title {
-  font-family: 'Noto Sans Devanagari', sans-serif;
-  font-size: clamp(1.7rem, 5.5vw, 3.5rem);
-  font-weight: 900;
-  background: linear-gradient(135deg, var(--gold) 0%, #ffe066 40%, var(--peach) 70%, var(--rose) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: 2px;
-  /* static filter — no animation */
-  filter: drop-shadow(0 0 14px rgba(255,215,0,0.55));
-  display: inline-block;
-}
+    /* initial state */
+    .circle-img {
+      width: 155px;
+      height: 155px;
+      border-radius: 50%;
+      object-fit: cover;
 
-/* ── CAKE ── */
-.cake-wrap {
-  margin: 18px auto;
-  position: relative;
-  width: 200px; height: 205px;
-}
-.cake-svg {
-  width: 200px;
-  animation: cakeBob 2.8s ease-in-out infinite;
-  will-change: transform;
-  /* filter on static element only, not animated */
-}
-@keyframes cakeBob {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-10px); }
-}
-/* flame: transform only */
-.flame {
-  animation: flicker 0.4s ease-in-out infinite alternate;
-  will-change: transform;
-  transform-origin: bottom center;
-}
-@keyframes flicker {
-  0%   { transform: scaleY(1) scaleX(1) rotate(-3deg); }
-  100% { transform: scaleY(0.85) scaleX(1.1) rotate(3deg); }
-}
-/* glow ring: opacity + transform only — no blur */
-.glow-ring {
-  position: absolute; top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 155px; height: 155px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,215,0,0.18) 0%, transparent 70%);
-  animation: glowPulse 2s ease-in-out infinite;
-  pointer-events: none;
-  will-change: transform, opacity;
-}
-@keyframes glowPulse {
-  0%, 100% { transform: translate(-50%,-50%) scale(1); opacity: 0.7; }
-  50%       { transform: translate(-50%,-50%) scale(1.3); opacity: 0.25; }
-}
+      border: 3px solid #ffd700;
+      box-shadow:
+        0 0 12px rgba(255, 215, 0, 0.7),
+        0 0 25px rgba(255, 77, 141, 0.5);
 
-/* ── NAME CARD — no backdrop-filter ── */
-.name-card {
-  position: relative;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,215,0,0.25);
-  border-radius: 20px;
-  padding: 20px 40px;
-  margin: 10px auto 18px;
-  /* backdrop-filter removed — huge GPU cost */
-  box-shadow: 0 0 40px rgba(255,77,141,0.15), inset 0 1px 0 rgba(255,255,255,0.08);
-  max-width: 680px;
-  animation: cardFloat 4.5s ease-in-out infinite;
-  will-change: transform;
-}
-@keyframes cardFloat {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-8px); }
-}
-.name-card::after {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--rose), var(--gold), var(--lav), transparent);
-  border-radius: 20px 20px 0 0;
-  /* static — no animation */
-}
-/* corner gems — static, no animation */
-.card-corner {
-  position: absolute; font-size: 0.85rem;
-  color: rgba(255,215,0,0.5);
-}
-.cc-tl { top: 8px; left: 12px; }
-.cc-tr { top: 8px; right: 12px; }
-.cc-bl { bottom: 8px; left: 12px; }
-.cc-br { bottom: 8px; right: 12px; }
+      /* animation */
+      opacity: 0;
+      transform: translateY(80px) scale(0.9);
+      animation: riseUp 1.2s ease-out forwards;
+    }
 
-.name-en {
-  font-family: 'Dancing Script', cursive;
-  font-size: clamp(1.6rem, 5vw, 3rem);
-  color: #fff;
-  text-shadow: 0 0 18px var(--rose);
-  margin-bottom: 6px;
-}
-.name-hi {
-  font-family: 'Noto Sans Devanagari', sans-serif;
-  font-size: clamp(1.1rem, 3.5vw, 1.9rem);
-  font-weight: 600;
-  color: var(--lav);
-  text-shadow: 0 0 12px rgba(192,132,252,0.6);
-}
+    /* animation keyframes */
+    @keyframes riseUp {
+      0% {
+        opacity: 0;
+        transform: translateY(80px) scale(0.9);
+      }
 
-/* ── MESSAGE BOX — no backdrop-filter ── */
-.msg-box {
-  max-width: 680px;
-  background: rgba(255,77,141,0.06);
-  border: 1px solid rgba(255,183,71,0.16);
-  border-radius: 24px;
-  padding: 28px 36px;
-  margin: 0 auto 24px;
-  position: relative;
-}
-.msg-box::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 1.5px;
-  background: linear-gradient(90deg, transparent, var(--rose), var(--gold), var(--lav), transparent);
-  border-radius: 24px 24px 0 0;
-}
-.msg-en {
-  font-size: clamp(0.95rem, 2.2vw, 1.18rem);
-  color: rgba(255,255,255,0.86);
-  line-height: 1.9; margin-bottom: 14px; font-style: italic;
-}
-.divider {
-  width: 65px; height: 1.5px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  margin: 14px auto; border-radius: 2px;
-}
-.msg-hi {
-  font-family: 'Noto Sans Devanagari', sans-serif;
-  font-size: clamp(0.95rem, 2.2vw, 1.18rem);
-  color: rgba(255,224,240,0.88);
-  line-height: 2; font-weight: 400;
-}
+      60% {
+        opacity: 1;
+        transform: translateY(-10px) scale(1.05);
+      }
 
-/* ── EMOJI ROW — staggered transform only ── */
-.emoji-row {
-  display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
-  margin: 18px 0 20px;
-}
-.emoji-item {
-  font-size: 2rem;
-  display: inline-block;
-  animation: emojiDance 2s ease-in-out infinite;
-  animation-delay: var(--ed, 0s);
-  cursor: default;
-  will-change: transform;
-}
-.emoji-item:hover { transform: scale(1.4) rotate(12deg) !important; }
-@keyframes emojiDance {
-  0%, 100% { transform: translateY(0) rotate(-5deg); }
-  50%       { transform: translateY(-8px) rotate(5deg); }
-}
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
 
-/* ── BUTTON ── */
-.confetti-btn {
-  position: relative;
-  display: inline-block;
-  margin: 8px auto 26px;
-  padding: 14px 40px;
-  font-family: 'Noto Sans Devanagari', sans-serif;
-  font-size: 1.05rem; font-weight: 700;
-  color: var(--deep);
-  background: linear-gradient(135deg, var(--gold), var(--peach), var(--rose), var(--lav), var(--gold));
-  background-size: 250% 250%;
-  border: none; border-radius: 50px; cursor: pointer;
-  box-shadow: 0 6px 28px rgba(255,77,141,0.45);
-  animation: btnGrad 4s ease infinite;
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
-  will-change: transform;
-  letter-spacing: 0.5px;
-}
-.confetti-btn:hover {
-  transform: scale(1.06);
-  box-shadow: 0 10px 40px rgba(255,215,0,0.6);
-}
-.confetti-btn:active { transform: scale(0.97); }
-@keyframes btnGrad {
-  0%,100% { background-position: 0% 50%; }
-  50%      { background-position: 100% 50%; }
-}
+    .circle-img:hover {
+      transform: scale(1.1);
+    }
 
-/* ── CONFETTI — canvas-based, no DOM pieces ── */
+    /* ── PAGE ── */
+    .page {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      text-align: center;
+    }
 
-/* ── FOOTER ── */
-.footer {
-  font-family: 'Noto Sans Devanagari', sans-serif;
-  font-size: 0.85rem;
-  color: rgba(255,255,255,0.28);
-  margin-top: 16px; letter-spacing: 1.5px;
-}
+    /* ── TOP CROWN — transform only ── */
+    .crown {
+      font-size: 3.8rem;
+      margin-bottom: 10px;
+      display: inline-block;
+      animation: crownBounce 1.8s ease-in-out infinite;
+      will-change: transform;
+      /* filter removed from animation — static only */
+      filter: drop-shadow(0 0 16px #ffd700);
+    }
 
-/* ── RESPONSIVE ── */
-@media (max-width: 480px) {
-  .msg-box { padding: 20px 16px; }
-  .name-card { padding: 16px 18px; }
-  .crown-on-text { font-size: 1.4rem; top: -18px; left: -4px; }
-}
-</style>
+    @keyframes crownBounce {
+
+      0%,
+      100% {
+        transform: translateY(0) rotate(-5deg);
+      }
+
+      50% {
+        transform: translateY(-10px) rotate(5deg);
+      }
+    }
+
+    /* ── TITLE ── */
+    .title-wrap {
+      position: relative;
+      margin-bottom: 14px;
+    }
+
+    .hb-text {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(2.8rem, 9vw, 7rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff5e0, var(--gold), var(--peach), var(--rose), var(--lav), var(--gold));
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      /* single animation only */
+      animation: gradShift 4s ease infinite;
+      letter-spacing: 2px;
+      line-height: 1.1;
+      will-change: background-position;
+    }
+
+    @keyframes gradShift {
+
+      0%,
+      100% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+    }
+
+    /* ── DEVANAGARI + TILTED CROWN ── */
+    .deva-title-wrap {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+
+    /* Crown: transform only — NO top animation (kills layout) */
+    .crown-on-text {
+      position: absolute;
+      top: -15px;
+      left: 40px;
+      font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+      line-height: 1;
+      display: inline-block;
+      animation: crownWobble 4s ease-in-out infinite;
+      will-change: transform;
+      filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.8));
+      z-index: 5;
+    }
+
+    /* Only uses transform — no layout-triggering properties */
+    @keyframes crownWobble {
+      0% {
+        transform: rotate(-22deg) translateY(0);
+      }
+
+      25% {
+        transform: rotate(-12deg) translateY(-4px);
+      }
+
+      50% {
+        transform: rotate(-26deg) translateY(-2px);
+      }
+
+      75% {
+        transform: rotate(-16deg) translateY(-5px);
+      }
+
+      100% {
+        transform: rotate(-22deg) translateY(0);
+      }
+    }
+
+    /* .deva-title {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: clamp(1.7rem, 5.5vw, 3.5rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--gold) 0%, #ffe066 40%, var(--peach) 70%, var(--rose) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 2px;
+      filter: drop-shadow(0 0 14px rgba(255, 215, 0, 0.55));
+      display: inline-block;
+    } */
+
+    .deva-title {
+      font-family: 'Yatra One', cursive;
+      /* font-weight: 400;
+      line-height: 1.8; */
+      font-size: clamp(1.7rem, 5.5vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.4;
+
+      background: linear-gradient(135deg,
+          #ffd700 0%,
+          #ffe066 30%,
+          #ffb347 60%,
+          #ff4d8d 100%);
+
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+
+      letter-spacing: 1px;
+      text-align: center;
+
+      filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.5));
+      display: inline-block;
+    }
+
+    /* ── CAKE ── */
+    .cake-wrap {
+      margin: 18px auto;
+      position: relative;
+      width: 200px;
+      height: 205px;
+    }
+
+    .cake-svg {
+      width: 200px;
+      animation: cakeBob 2.8s ease-in-out infinite;
+      will-change: transform;
+      /* filter on static element only, not animated */
+    }
+
+    @keyframes cakeBob {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    /* flame: transform only */
+    .flame {
+      animation: flicker 0.4s ease-in-out infinite alternate;
+      will-change: transform;
+      transform-origin: bottom center;
+    }
+
+    @keyframes flicker {
+      0% {
+        transform: scaleY(1) scaleX(1) rotate(-3deg);
+      }
+
+      100% {
+        transform: scaleY(0.85) scaleX(1.1) rotate(3deg);
+      }
+    }
+
+    /* glow ring: opacity + transform only — no blur */
+    .glow-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 155px;
+      height: 155px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 215, 0, 0.18) 0%, transparent 70%);
+      animation: glowPulse 2s ease-in-out infinite;
+      pointer-events: none;
+      will-change: transform, opacity;
+    }
+
+    @keyframes glowPulse {
+
+      0%,
+      100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.7;
+      }
+
+      50% {
+        transform: translate(-50%, -50%) scale(1.3);
+        opacity: 0.25;
+      }
+    }
+
+    /* ── NAME CARD — no backdrop-filter ── */
+    .name-card {
+      position: relative;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 215, 0, 0.25);
+      border-radius: 20px;
+      padding: 20px 40px;
+      margin: 10px auto 18px;
+      /* backdrop-filter removed — huge GPU cost */
+      box-shadow: 0 0 40px rgba(255, 77, 141, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      max-width: 680px;
+      animation: cardFloat 4.5s ease-in-out infinite;
+      will-change: transform;
+    }
+
+    @keyframes cardFloat {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+
+    .name-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--rose), var(--gold), var(--lav), transparent);
+      border-radius: 20px 20px 0 0;
+      /* static — no animation */
+    }
+
+    /* corner gems — static, no animation */
+    .card-corner {
+      position: absolute;
+      font-size: 0.85rem;
+      color: rgba(255, 215, 0, 0.5);
+    }
+
+    .cc-tl {
+      top: 8px;
+      left: 12px;
+    }
+
+    .cc-tr {
+      top: 8px;
+      right: 12px;
+    }
+
+    .cc-bl {
+      bottom: 8px;
+      left: 12px;
+    }
+
+    .cc-br {
+      bottom: 8px;
+      right: 12px;
+    }
+
+    .name-en {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(1.6rem, 5vw, 3rem);
+      color: #fff;
+      text-shadow: 0 0 18px var(--rose);
+      margin-bottom: 6px;
+    }
+
+    .name-hi {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: clamp(1.1rem, 3.5vw, 1.9rem);
+      font-weight: 600;
+      color: var(--lav);
+      text-shadow: 0 0 12px rgba(192, 132, 252, 0.6);
+    }
+
+    /* ── MESSAGE BOX — no backdrop-filter ── */
+    .msg-box {
+      max-width: 680px;
+      background: rgba(255, 77, 141, 0.06);
+      border: 1px solid rgba(255, 183, 71, 0.16);
+      border-radius: 24px;
+      padding: 28px 36px;
+      margin: 0 auto 24px;
+      position: relative;
+    }
+
+    .msg-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1.5px;
+      background: linear-gradient(90deg, transparent, var(--rose), var(--gold), var(--lav), transparent);
+      border-radius: 24px 24px 0 0;
+    }
+
+    .msg-en {
+      font-size: clamp(0.95rem, 2.2vw, 1.18rem);
+      color: rgba(255, 255, 255, 0.86);
+      line-height: 1.9;
+      margin-bottom: 14px;
+      font-style: italic;
+    }
+
+    .divider {
+      width: 65px;
+      height: 1.5px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 14px auto;
+      border-radius: 2px;
+    }
+
+    .msg-hi {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: clamp(0.95rem, 2.2vw, 1.18rem);
+      color: rgba(255, 224, 240, 0.88);
+      line-height: 2;
+      font-weight: 400;
+    }
+
+    /* ── EMOJI ROW — staggered transform only ── */
+    .emoji-row {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 18px 0 20px;
+    }
+
+    .emoji-item {
+      font-size: 2rem;
+      display: inline-block;
+      animation: emojiDance 2s ease-in-out infinite;
+      animation-delay: var(--ed, 0s);
+      cursor: default;
+      will-change: transform;
+    }
+
+    .emoji-item:hover {
+      transform: scale(1.4) rotate(12deg) !important;
+    }
+
+    @keyframes emojiDance {
+
+      0%,
+      100% {
+        transform: translateY(0) rotate(-5deg);
+      }
+
+      50% {
+        transform: translateY(-8px) rotate(5deg);
+      }
+    }
+
+    /* ── BUTTON ── */
+    .confetti-btn {
+      position: relative;
+      display: inline-block;
+      margin: 8px auto 26px;
+      padding: 14px 40px;
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--deep);
+      background: linear-gradient(135deg, var(--gold), var(--peach), var(--rose), var(--lav), var(--gold));
+      background-size: 250% 250%;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 6px 28px rgba(255, 77, 141, 0.45);
+      animation: btnGrad 4s ease infinite;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      will-change: transform;
+      letter-spacing: 0.5px;
+    }
+
+    .confetti-btn:hover {
+      transform: scale(1.06);
+      box-shadow: 0 10px 40px rgba(255, 215, 0, 0.6);
+    }
+
+    .confetti-btn:active {
+      transform: scale(0.97);
+    }
+
+    @keyframes btnGrad {
+
+      0%,
+      100% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+    }
+
+    /* ── CONFETTI — canvas-based, no DOM pieces ── */
+
+    /* ── FOOTER ── */
+    .footer {
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.28);
+      margin-top: 16px;
+      letter-spacing: 1.5px;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 480px) {
+      .msg-box {
+        padding: 20px 16px;
+      }
+
+      .name-card {
+        padding: 16px 18px;
+      }
+
+      .crown-on-text {
+        font-size: 1.4rem;
+        top: -18px;
+        left: -4px;
+      }
+
+      .prayersection {
+        font-family: 'Yatra One', cursive !important;
+        font-size: clamp(0.95rem, 2.2vw, 1.18rem) !important;
+        color: rgba(255, 224, 240, 0.88) !important;
+        line-height: 2 !important;
+        font-weight: 500 !important;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="bg-mesh"></div>
-<canvas id="particleCanvas"></canvas>
+  <div class="bg-mesh"></div>
+  <canvas id="particleCanvas"></canvas>
 
-<div class="cursor-dot"  id="cursorDot"></div>
-<div class="cursor-ring" id="cursorRing"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
 
-<div class="page">
+  <div class="page">
+    <div class="crown">👑</div>
 
-  <div class="crown">👑</div>
-
-  <div class="title-wrap">
-    <div class="hb-text">Happy Birthday!</div>
-    <div class="deva-title-wrap">
-      <span class="crown-on-text">👑</span>
-      <div class="deva-title">माऊली 🎉</div>
+    <div class="title-wrap">
+      <div class="hb-text">Happy Birthday!</div>
+      <div class="deva-title-wrap" style="margin-top: 25px;">
+        <span class="crown-on-text">👑</span>
+        <!-- <div class="deva-title">🎉 जन्मदिन मुबारक हो! 🎉</div>
+        <div class="img-sec"  style="height: 100px; width: 100px;">
+          <img src="birthday_pic.jpg" height="100" width="100"/>
+        </div> -->
+        <div class="deva-title img-title">
+          <img src="birthday_pic.jpg" class="circle-img left" />
+          <!-- <img src="birthday_pic.jpg" class="circle-img right" /> -->
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div class="cake-wrap">
-    <div class="glow-ring"></div>
-    <svg class="cake-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="100" cy="175" rx="78" ry="10" fill="#3d1260" opacity="0.5"/>
-      <rect x="30" y="130" width="140" height="45" rx="10" fill="#e91e8c"/>
-      <rect x="30" y="130" width="140" height="14" rx="8" fill="#f06eb5"/>
-      <circle cx="60"  cy="152" r="6" fill="#fff" opacity="0.6"/>
-      <circle cx="100" cy="152" r="6" fill="#ffd700" opacity="0.8"/>
-      <circle cx="140" cy="152" r="6" fill="#fff" opacity="0.6"/>
-      <path d="M30 140 Q45 125 60 138 Q75 125 90 138 Q105 125 120 138 Q135 125 150 138 Q165 125 170 140" stroke="#ff91d0" stroke-width="3" fill="none"/>
-      <rect x="55" y="90" width="90" height="40" rx="10" fill="#c2185b"/>
-      <rect x="55" y="90" width="90" height="12" rx="8" fill="#e91e8c"/>
-      <circle cx="80"  cy="110" r="5" fill="#ffd700" opacity="0.9"/>
-      <circle cx="100" cy="110" r="5" fill="#fff" opacity="0.7"/>
-      <circle cx="120" cy="110" r="5" fill="#ffd700" opacity="0.9"/>
-      <path d="M55 99 Q65 85 75 98 Q85 85 95 98 Q105 85 115 98 Q125 85 135 98 Q142 85 145 99" stroke="#f48fb1" stroke-width="2.5" fill="none"/>
-      <rect x="80"  y="72" width="8" height="20" rx="3" fill="#ffd700"/>
-      <rect x="95"  y="68" width="8" height="24" rx="3" fill="#c084fc"/>
-      <rect x="110" y="72" width="8" height="20" rx="3" fill="#34d399"/>
-      <ellipse class="flame" cx="84"  cy="70" rx="5" ry="8"   fill="#ff9800" opacity="0.95"/>
-      <ellipse class="flame" cx="84"  cy="70" rx="3" ry="5"   fill="#ffeb3b" style="animation-delay:.1s"/>
-      <ellipse class="flame" cx="99"  cy="66" rx="5" ry="8"   fill="#ff5722" opacity="0.95" style="animation-delay:.2s"/>
-      <ellipse class="flame" cx="99"  cy="66" rx="3" ry="5"   fill="#ffeb3b" style="animation-delay:.3s"/>
-      <ellipse class="flame" cx="114" cy="70" rx="5" ry="8"   fill="#ff9800" opacity="0.95" style="animation-delay:.15s"/>
-      <ellipse class="flame" cx="114" cy="70" rx="3" ry="5"   fill="#ffeb3b" style="animation-delay:.05s"/>
-      <text x="40"  y="155" font-size="14" fill="#ffd700" opacity="0.7">✦</text>
-      <text x="152" y="148" font-size="12" fill="#fff"    opacity="0.6">✦</text>
-      <text x="155" y="120" font-size="10" fill="#ffd700" opacity="0.5">✦</text>
-    </svg>
-  </div>
+    <div class="cake-wrap" style="margin: 0;">
+      <div class="glow-ring"></div>
+      <svg class="cake-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="100" cy="175" rx="78" ry="10" fill="#3d1260" opacity="0.5" />
+        <rect x="30" y="130" width="140" height="45" rx="10" fill="#e91e8c" />
+        <rect x="30" y="130" width="140" height="14" rx="8" fill="#f06eb5" />
+        <circle cx="60" cy="152" r="6" fill="#fff" opacity="0.6" />
+        <circle cx="100" cy="152" r="6" fill="#ffd700" opacity="0.8" />
+        <circle cx="140" cy="152" r="6" fill="#fff" opacity="0.6" />
+        <path d="M30 140 Q45 125 60 138 Q75 125 90 138 Q105 125 120 138 Q135 125 150 138 Q165 125 170 140"
+          stroke="#ff91d0" stroke-width="3" fill="none" />
+        <rect x="55" y="90" width="90" height="40" rx="10" fill="#c2185b" />
+        <rect x="55" y="90" width="90" height="12" rx="8" fill="#e91e8c" />
+        <circle cx="80" cy="110" r="5" fill="#ffd700" opacity="0.9" />
+        <circle cx="100" cy="110" r="5" fill="#fff" opacity="0.7" />
+        <circle cx="120" cy="110" r="5" fill="#ffd700" opacity="0.9" />
+        <path d="M55 99 Q65 85 75 98 Q85 85 95 98 Q105 85 115 98 Q125 85 135 98 Q142 85 145 99" stroke="#f48fb1"
+          stroke-width="2.5" fill="none" />
+        <rect x="80" y="72" width="8" height="20" rx="3" fill="#ffd700" />
+        <rect x="95" y="68" width="8" height="24" rx="3" fill="#c084fc" />
+        <rect x="110" y="72" width="8" height="20" rx="3" fill="#34d399" />
+        <ellipse class="flame" cx="84" cy="70" rx="5" ry="8" fill="#ff9800" opacity="0.95" />
+        <ellipse class="flame" cx="84" cy="70" rx="3" ry="5" fill="#ffeb3b" style="animation-delay:.1s" />
+        <ellipse class="flame" cx="99" cy="66" rx="5" ry="8" fill="#ff5722" opacity="0.95"
+          style="animation-delay:.2s" />
+        <ellipse class="flame" cx="99" cy="66" rx="3" ry="5" fill="#ffeb3b" style="animation-delay:.3s" />
+        <ellipse class="flame" cx="114" cy="70" rx="5" ry="8" fill="#ff9800" opacity="0.95"
+          style="animation-delay:.15s" />
+        <ellipse class="flame" cx="114" cy="70" rx="3" ry="5" fill="#ffeb3b" style="animation-delay:.05s" />
+        <text x="40" y="155" font-size="14" fill="#ffd700" opacity="0.7">✦</text>
+        <text x="152" y="148" font-size="12" fill="#fff" opacity="0.6">✦</text>
+        <text x="155" y="120" font-size="10" fill="#ffd700" opacity="0.5">✦</text>
+      </svg>
+    </div>
 
-  <div class="name-card">
-    <span class="card-corner cc-tl">✦</span>
+    <div class="name-card" style="padding: 20px 20px;">
+      <!-- <span class="card-corner cc-tl">✦</span>
     <span class="card-corner cc-tr">✦</span>
     <span class="card-corner cc-bl">✦</span>
     <span class="card-corner cc-br">✦</span>
     <div class="name-en">✨ Dear Sakhi / Dear Friend ✨</div>
-    <div class="name-hi">प्रिय सखी, आपको ढेर सारी शुभकामनाएँ 💖</div>
+    <div class="name-hi">प्रिय सखी, आपको ढेर सारी शुभकामनाएँ 💖</div> -->
+      <button style="margin: 0;" class="confetti-btn" id="celebrateBtn">
+        🎊 Celebrate! 🎊
+      </button>
+    </div>
+
+    <div class="msg-box">
+      <p class="msg-en">
+        On this beautiful day, the universe pauses to celebrate <em>you</em> —<br>
+        your laughter, your grace, your beautiful heart.<br>
+        May this year bring you joy beyond measure,<br>
+        adventures you haven't dreamed of yet, and love in every corner. 🌸
+      </p>
+      <div class="divider"></div>
+      <p class="msg-hi">
+        आज का यह खूबसूरत दिन सिर्फ तुम्हारा है। 🌺<br>
+        तुम्हारी मुस्कान से दुनिया रोशन होती है।<br>
+        यह साल तुम्हारे लिए खुशियों और सफलताओं से भरा हो।<br>
+        भगवान तुम्हें हमेशा खुश रखें — <strong>जन्मदिन मुबारक हो!</strong> 🎂💝
+      </p>
+      <div class="divider"></div>
+      <p class="prayersection" 
+      style="        font-family: 'Yatra One', cursive ;
+        font-size: clamp(0.95rem, 2.2vw, 1.18rem) ;
+        color: rgba(255, 224, 240, 0.88) ;
+        line-height: 2 ;
+        font-weight: 500 ;"
+      >💝🙇🏻‍♂️ आई तुळजाभवानीचा आशीर्वाद सदैव तुझ्या असो अशीच तिच्या जवळ प्रार्थना करतो 🙇🏻‍♂️💝</p>
+      <div>
+      </div>
+    </div>
+
+    <div class="emoji-row">
+      <span class="emoji-item" style="--ed:0s">🌸</span>
+      <span class="emoji-item" style="--ed:.2s">💖</span>
+      <span class="emoji-item" style="--ed:.4s">🎂</span>
+      <span class="emoji-item" style="--ed:.6s">🌟</span>
+      <span class="emoji-item" style="--ed:.8s">🎁</span>
+      <span class="emoji-item" style="--ed:1s">🦋</span>
+      <span class="emoji-item" style="--ed:1.2s">🌹</span>
+      <span class="emoji-item" style="--ed:1.4s">✨</span>
+    </div>
+
+    <!-- <button class="confetti-btn" id="celebrateBtn">
+    🎊 Celebrate! 🎊
+  </button> -->
+
+    <div class="footer">with lots of love & shimmer ✦ बहुत सारे प्यार के साथ</div>
   </div>
 
-  <div class="msg-box">
-    <p class="msg-en">
-      On this beautiful day, the universe pauses to celebrate <em>you</em> —<br>
-      your laughter, your grace, your beautiful heart.<br>
-      May this year bring you joy beyond measure,<br>
-      adventures you haven't dreamed of yet, and love in every corner. 🌸
-    </p>
-    <div class="divider"></div>
-    <p class="msg-hi">
-      आज का यह खूबसूरत दिन सिर्फ तुम्हारा है। 🌺<br>
-      तुम्हारी मुस्कान से दुनिया रोशन होती है।<br>
-      यह साल तुम्हारे लिए खुशियों और सफलताओं से भरा हो।<br>
-      भगवान तुम्हें हमेशा खुश रखें — <strong>जन्मदिन मुबारक हो!</strong> 🎂💝
-    </p>
-  </div>
+  <script>
+    'use strict';
 
-  <div class="emoji-row">
-    <span class="emoji-item" style="--ed:0s">🌸</span>
-    <span class="emoji-item" style="--ed:.2s">💖</span>
-    <span class="emoji-item" style="--ed:.4s">🎂</span>
-    <span class="emoji-item" style="--ed:.6s">🌟</span>
-    <span class="emoji-item" style="--ed:.8s">🎁</span>
-    <span class="emoji-item" style="--ed:1s">🦋</span>
-    <span class="emoji-item" style="--ed:1.2s">🌹</span>
-    <span class="emoji-item" style="--ed:1.4s">✨</span>
-  </div>
+    /* ═══════════════════════════════════════════════
+       CANVAS ENGINE — all particles drawn here
+       Stars, hearts, balloons, sparkles, confetti
+       Zero extra DOM nodes after init
+    ═══════════════════════════════════════════════ */
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+    let W = 0, H = 0;
 
-  <button class="confetti-btn" id="celebrateBtn">
-    🎊 जश्न मनाओ — Celebrate! 🎊
-  </button>
+    function resize() {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize, { passive: true });
 
-  <div class="footer">with lots of love & shimmer ✦ बहुत सारे प्यार के साथ</div>
-</div>
+    /* ── COLORS ── */
+    const COLS = ['#ff4d8d', '#ffd700', '#c084fc', '#34d399', '#ffb347', '#ffffff', '#ff6b6b', '#f9a8d4'];
+    const HCOLS = ['💖', '💗', '💕', '💓', '💝', '🌸', '✨', '💫'];
+    const BCOLS = [
+      ['#ff4d8d', '#c2185b'], ['#ffd700', '#f9a825'],
+      ['#c084fc', '#7c3aed'], ['#34d399', '#059669'],
+      ['#ffb347', '#e65100'], ['#f472b6', '#be185d']
+    ];
 
-<script>
-'use strict';
+    /* ── PARTICLE POOLS ── */
+    // Stars — static array, created once
+    const STAR_COUNT = 80; // was 150 DOM nodes
+    const stars = [];
+    for (let i = 0; i < STAR_COUNT; i++) {
+      stars.push({
+        x: Math.random() * 2000, // pre-scaled on first draw
+        y: Math.random() * 1200,
+        r: Math.random() * 1.5 + 0.4,
+        base: Math.random() * 0.6 + 0.2,
+        speed: Math.random() * 0.8 + 0.4,
+        phase: Math.random() * Math.PI * 2
+      });
+    }
 
-/* ═══════════════════════════════════════════════
-   CANVAS ENGINE — all particles drawn here
-   Stars, hearts, balloons, sparkles, confetti
-   Zero extra DOM nodes after init
-═══════════════════════════════════════════════ */
-const canvas = document.getElementById('particleCanvas');
-const ctx    = canvas.getContext('2d');
-let W = 0, H = 0;
+    // Hearts — pool of max 12, reused
+    const MAX_HEARTS = 12;
+    const hearts = [];
+    const heartEmojis = ['💖', '💗', '💕', '💓', '💝', '🌸', '✨', '💫'];
+    let heartTimer = 0;
+    const HEART_INTERVAL = 900; // ms between spawns (was 700, now slower)
 
-function resize() {
-  W = canvas.width  = window.innerWidth;
-  H = canvas.height = window.innerHeight;
-}
-resize();
-window.addEventListener('resize', resize, { passive: true });
+    function spawnHeart(now) {
+      if (hearts.length >= MAX_HEARTS) return;
+      hearts.push({
+        x: Math.random() * W,
+        y: H + 20,
+        emoji: heartEmojis[Math.floor(Math.random() * heartEmojis.length)],
+        size: Math.random() * 16 + 14,
+        vy: -(Math.random() * 1.2 + 0.8),
+        vx: (Math.random() - 0.5) * 0.5,
+        rot: 0, rotV: (Math.random() - 0.5) * 0.04,
+        alpha: 0, fadeIn: true,
+        born: now
+      });
+    }
 
-/* ── COLORS ── */
-const COLS  = ['#ff4d8d','#ffd700','#c084fc','#34d399','#ffb347','#ffffff','#ff6b6b','#f9a8d4'];
-const HCOLS = ['💖','💗','💕','💓','💝','🌸','✨','💫'];
-const BCOLS = [
-  ['#ff4d8d','#c2185b'],['#ffd700','#f9a825'],
-  ['#c084fc','#7c3aed'],['#34d399','#059669'],
-  ['#ffb347','#e65100'],['#f472b6','#be185d']
-];
+    // Balloons — pool of max 8
+    const MAX_BALLOONS = 8;
+    const balloons = [];
+    let balloonTimer = 0;
+    const BALLOON_INTERVAL = 2200;
 
-/* ── PARTICLE POOLS ── */
-// Stars — static array, created once
-const STAR_COUNT = 80; // was 150 DOM nodes
-const stars = [];
-for (let i = 0; i < STAR_COUNT; i++) {
-  stars.push({
-    x: Math.random() * 2000, // pre-scaled on first draw
-    y: Math.random() * 1200,
-    r: Math.random() * 1.5 + 0.4,
-    base: Math.random() * 0.6 + 0.2,
-    speed: Math.random() * 0.8 + 0.4,
-    phase: Math.random() * Math.PI * 2
-  });
-}
+    function spawnBalloon() {
+      if (balloons.length >= MAX_BALLOONS) return;
+      const pair = BCOLS[Math.floor(Math.random() * BCOLS.length)];
+      balloons.push({
+        x: Math.random() * W,
+        y: H + 80,
+        vy: -(Math.random() * 1.0 + 0.6),
+        vx: Math.sin(Date.now() * 0.001) * 0.3,
+        w: Math.random() * 25 + 38,
+        fill: pair[0], dark: pair[1],
+        rot: (Math.random() - 0.5) * 0.1,
+        rotV: (Math.random() - 0.5) * 0.008,
+        alpha: 0, fadeIn: true
+      });
+    }
 
-// Hearts — pool of max 12, reused
-const MAX_HEARTS = 12;
-const hearts = [];
-const heartEmojis = ['💖','💗','💕','💓','💝','🌸','✨','💫'];
-let heartTimer = 0;
-const HEART_INTERVAL = 900; // ms between spawns (was 700, now slower)
+    // Sparkles from mouse — tiny pool
+    const MAX_SPARKS = 18;
+    const sparks = [];
+    let mouseX = -100, mouseY = -100;
+    let lastSparkTime = 0;
 
-function spawnHeart(now) {
-  if (hearts.length >= MAX_HEARTS) return;
-  hearts.push({
-    x: Math.random() * W,
-    y: H + 20,
-    emoji: heartEmojis[Math.floor(Math.random() * heartEmojis.length)],
-    size: Math.random() * 16 + 14,
-    vy: -(Math.random() * 1.2 + 0.8),
-    vx: (Math.random() - 0.5) * 0.5,
-    rot: 0, rotV: (Math.random() - 0.5) * 0.04,
-    alpha: 0, fadeIn: true,
-    born: now
-  });
-}
+    function addSpark(x, y, now) {
+      if (now - lastSparkTime < 55) return; // throttle (was 40ms)
+      lastSparkTime = now;
+      if (sparks.length >= MAX_SPARKS) sparks.shift();
+      sparks.push({
+        x, y,
+        r: Math.random() * 5 + 2,
+        col: COLS[Math.floor(Math.random() * COLS.length)],
+        alpha: 1,
+        life: 0
+      });
+    }
 
-// Balloons — pool of max 8
-const MAX_BALLOONS = 8;
-const balloons = [];
-let balloonTimer = 0;
-const BALLOON_INTERVAL = 2200;
+    // Confetti — burst pool
+    const confetti = [];
+    let confettiActive = false;
 
-function spawnBalloon() {
-  if (balloons.length >= MAX_BALLOONS) return;
-  const pair = BCOLS[Math.floor(Math.random() * BCOLS.length)];
-  balloons.push({
-    x: Math.random() * W,
-    y: H + 80,
-    vy: -(Math.random() * 1.0 + 0.6),
-    vx: Math.sin(Date.now() * 0.001) * 0.3,
-    w: Math.random() * 25 + 38,
-    fill: pair[0], dark: pair[1],
-    rot: (Math.random() - 0.5) * 0.1,
-    rotV: (Math.random() - 0.5) * 0.008,
-    alpha: 0, fadeIn: true
-  });
-}
-
-// Sparkles from mouse — tiny pool
-const MAX_SPARKS = 18;
-const sparks = [];
-let mouseX = -100, mouseY = -100;
-let lastSparkTime = 0;
-
-function addSpark(x, y, now) {
-  if (now - lastSparkTime < 55) return; // throttle (was 40ms)
-  lastSparkTime = now;
-  if (sparks.length >= MAX_SPARKS) sparks.shift();
-  sparks.push({
-    x, y,
-    r: Math.random() * 5 + 2,
-    col: COLS[Math.floor(Math.random() * COLS.length)],
-    alpha: 1,
-    life: 0
-  });
-}
-
-// Confetti — burst pool
-const confetti = [];
-let confettiActive = false;
-
-function launchConfetti() {
-  confetti.length = 0;
-  const count = 90; // was 130 DOM nodes
-  for (let i = 0; i < count; i++) {
-    confetti.push({
-      x: Math.random() * W,
-      y: -Math.random() * 60 - 10,
-      w: Math.random() * 9 + 5,
-      h: Math.random() * 5 + 3,
-      col: COLS[Math.floor(Math.random() * COLS.length)],
-      vx: (Math.random() - 0.5) * 3,
-      vy: Math.random() * 2 + 1.5,
-      rot: Math.random() * Math.PI * 2,
-      rotV: (Math.random() - 0.5) * 0.15,
-      alpha: 1,
-      isCircle: Math.random() > 0.45,
-      delay: Math.random() * 60 | 0 // frames
-    });
-  }
-  confettiActive = true;
-}
-
-setInterval(launchConfetti,2000)
-
-/* ── DRAW BALLOON on canvas ── */
-function drawBalloon(b) {
-  ctx.save();
-  ctx.translate(b.x, b.y);
-  ctx.rotate(b.rot);
-  ctx.globalAlpha = Math.min(b.alpha, 0.9);
-
-  const w = b.w, h = w * 1.2;
-
-  // Body
-  ctx.beginPath();
-  ctx.ellipse(0, 0, w / 2, h / 2, 0, 0, Math.PI * 2);
-  ctx.fillStyle = b.fill;
-  ctx.fill();
-
-  // Sheen
-  ctx.beginPath();
-  ctx.ellipse(-w * 0.15, -h * 0.2, w * 0.18, h * 0.22, -0.3, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(255,255,255,0.15)';
-  ctx.fill();
-
-  // String
-  ctx.beginPath();
-  ctx.moveTo(0, h / 2);
-  ctx.quadraticCurveTo(-4, h / 2 + 14, 0, h / 2 + 26);
-  ctx.strokeStyle = 'rgba(200,200,200,0.4)';
-  ctx.lineWidth = 1;
-  ctx.stroke();
-
-  ctx.restore();
-}
-
-/* ── MAIN LOOP ── */
-let lastTime = 0;
-function loop(now) {
-  const dt = Math.min(now - lastTime, 50); // cap at 50ms
-  lastTime = now;
-
-  ctx.clearRect(0, 0, W, H);
-
-  /* STARS */
-  for (let i = 0; i < stars.length; i++) {
-    const s = stars[i];
-    const op = s.base * (0.5 + 0.5 * Math.sin(now * s.speed * 0.001 + s.phase));
-    ctx.beginPath();
-    ctx.arc(
-      (s.x / 2000) * W,
-      (s.y / 1200) * H,
-      s.r, 0, Math.PI * 2
-    );
-    ctx.fillStyle = `rgba(255,255,255,${op.toFixed(2)})`;
-    ctx.fill();
-  }
-
-  /* HEARTS */
-  if (now - heartTimer > HEART_INTERVAL) {
-    spawnHeart(now);
-    heartTimer = now;
-  }
-  for (let i = hearts.length - 1; i >= 0; i--) {
-    const h = hearts[i];
-    h.x += h.vx;
-    h.y += h.vy;
-    h.rot += h.rotV;
-    if (h.fadeIn) { h.alpha = Math.min(h.alpha + 0.04, 1); if (h.alpha >= 1) h.fadeIn = false; }
-    if (h.y < -h.size * 2) h.alpha -= 0.04;
-    if (h.alpha <= 0) { hearts.splice(i, 1); continue; }
-    ctx.save();
-    ctx.globalAlpha = h.alpha;
-    ctx.font = `${h.size}px serif`;
-    ctx.translate(h.x, h.y);
-    ctx.rotate(h.rot);
-    ctx.fillText(h.emoji, -h.size / 2, h.size / 2);
-    ctx.restore();
-  }
-
-  /* BALLOONS */
-  if (now - balloonTimer > BALLOON_INTERVAL) {
-    spawnBalloon();
-    balloonTimer = now;
-  }
-  for (let i = balloons.length - 1; i >= 0; i--) {
-    const b = balloons[i];
-    b.y  += b.vy;
-    b.x  += Math.sin(now * 0.001 + i) * 0.3;
-    b.rot += b.rotV;
-    if (b.fadeIn) { b.alpha = Math.min(b.alpha + 0.03, 1); if (b.alpha >= 1) b.fadeIn = false; }
-    if (b.y < -b.w * 2) b.alpha -= 0.04;
-    if (b.alpha <= 0) { balloons.splice(i, 1); continue; }
-    drawBalloon(b);
-  }
-
-  /* SPARKLES */
-  for (let i = sparks.length - 1; i >= 0; i--) {
-    const s = sparks[i];
-    s.life += dt;
-    s.alpha = Math.max(0, 1 - s.life / 650);
-    if (s.alpha <= 0) { sparks.splice(i, 1); continue; }
-    ctx.beginPath();
-    ctx.arc(s.x, s.y, s.r * s.alpha, 0, Math.PI * 2);
-    ctx.fillStyle = s.col;
-    ctx.globalAlpha = s.alpha;
-    ctx.fill();
-    ctx.globalAlpha = 1;
-  }
-
-  /* CONFETTI */
-  if (confettiActive) {
-    let alive = 0;
-    for (let i = 0; i < confetti.length; i++) {
-      const c = confetti[i];
-      if (c.delay > 0) { c.delay--; continue; }
-      c.x   += c.vx;
-      c.y   += c.vy;
-      c.vy  += 0.045;   // gravity
-      c.rot += c.rotV;
-      if (c.y > H + 20) c.alpha -= 0.05;
-      if (c.alpha <= 0) continue;
-      alive++;
-      ctx.save();
-      ctx.translate(c.x, c.y);
-      ctx.rotate(c.rot);
-      ctx.globalAlpha = c.alpha;
-      ctx.fillStyle = c.col;
-      if (c.isCircle) {
-        ctx.beginPath();
-        ctx.arc(0, 0, c.w / 2, 0, Math.PI * 2);
-        ctx.fill();
-      } else {
-        ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
+    function launchConfetti() {
+      confetti.length = 0;
+      const count = 90; // was 130 DOM nodes
+      for (let i = 0; i < count; i++) {
+        confetti.push({
+          x: Math.random() * W,
+          y: -Math.random() * 60 - 10,
+          w: Math.random() * 9 + 5,
+          h: Math.random() * 5 + 3,
+          col: COLS[Math.floor(Math.random() * COLS.length)],
+          vx: (Math.random() - 0.5) * 3,
+          vy: Math.random() * 2 + 1.5,
+          rot: Math.random() * Math.PI * 2,
+          rotV: (Math.random() - 0.5) * 0.15,
+          alpha: 1,
+          isCircle: Math.random() > 0.45,
+          delay: Math.random() * 60 | 0 // frames
+        });
       }
+      confettiActive = true;
+    }
+
+    setInterval(launchConfetti, 2000)
+
+    /* ── DRAW BALLOON on canvas ── */
+    function drawBalloon(b) {
+      ctx.save();
+      ctx.translate(b.x, b.y);
+      ctx.rotate(b.rot);
+      ctx.globalAlpha = Math.min(b.alpha, 0.9);
+
+      const w = b.w, h = w * 1.2;
+
+      // Body
+      ctx.beginPath();
+      ctx.ellipse(0, 0, w / 2, h / 2, 0, 0, Math.PI * 2);
+      ctx.fillStyle = b.fill;
+      ctx.fill();
+
+      // Sheen
+      ctx.beginPath();
+      ctx.ellipse(-w * 0.15, -h * 0.2, w * 0.18, h * 0.22, -0.3, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,0.15)';
+      ctx.fill();
+
+      // String
+      ctx.beginPath();
+      ctx.moveTo(0, h / 2);
+      ctx.quadraticCurveTo(-4, h / 2 + 14, 0, h / 2 + 26);
+      ctx.strokeStyle = 'rgba(200,200,200,0.4)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
       ctx.restore();
     }
-    if (alive === 0) confettiActive = false;
-  }
 
-  requestAnimationFrame(loop);
-}
-requestAnimationFrame(loop);
+    /* ── MAIN LOOP ── */
+    let lastTime = 0;
+    function loop(now) {
+      const dt = Math.min(now - lastTime, 50); // cap at 50ms
+      lastTime = now;
 
-/* ── SEED initial balloons ── */
-for (let i = 0; i < 4; i++) {
-  setTimeout(() => {
-    spawnBalloon();
-    balloonTimer = performance.now();
-  }, i * 500);
-}
+      ctx.clearRect(0, 0, W, H);
 
-/* ═══════════════════════════════════════════════
-   CURSOR — uses transform instead of left/top
-═══════════════════════════════════════════════ */
-const dot  = document.getElementById('cursorDot');
-const ring = document.getElementById('cursorRing');
-let mx = -100, my = -100, rx = -100, ry = -100;
-let cursorRafPending = false;
+      /* STARS */
+      for (let i = 0; i < stars.length; i++) {
+        const s = stars[i];
+        const op = s.base * (0.5 + 0.5 * Math.sin(now * s.speed * 0.001 + s.phase));
+        ctx.beginPath();
+        ctx.arc(
+          (s.x / 2000) * W,
+          (s.y / 1200) * H,
+          s.r, 0, Math.PI * 2
+        );
+        ctx.fillStyle = `rgba(255,255,255,${op.toFixed(2)})`;
+        ctx.fill();
+      }
 
-document.addEventListener('mousemove', e => {
-  mx = e.clientX;
-  my = e.clientY;
-  addSpark(mx, my, e.timeStamp);
-  if (!cursorRafPending) {
-    cursorRafPending = true;
-    requestAnimationFrame(updateCursor);
-  }
-}, { passive: true });
+      /* HEARTS */
+      if (now - heartTimer > HEART_INTERVAL) {
+        spawnHeart(now);
+        heartTimer = now;
+      }
+      for (let i = hearts.length - 1; i >= 0; i--) {
+        const h = hearts[i];
+        h.x += h.vx;
+        h.y += h.vy;
+        h.rot += h.rotV;
+        if (h.fadeIn) { h.alpha = Math.min(h.alpha + 0.04, 1); if (h.alpha >= 1) h.fadeIn = false; }
+        if (h.y < -h.size * 2) h.alpha -= 0.04;
+        if (h.alpha <= 0) { hearts.splice(i, 1); continue; }
+        ctx.save();
+        ctx.globalAlpha = h.alpha;
+        ctx.font = `${h.size}px serif`;
+        ctx.translate(h.x, h.y);
+        ctx.rotate(h.rot);
+        ctx.fillText(h.emoji, -h.size / 2, h.size / 2);
+        ctx.restore();
+      }
 
-function updateCursor() {
-  cursorRafPending = false;
-  dot.style.transform  = `translate(${mx - 7}px, ${my - 7}px)`;
-  rx += (mx - rx) * 0.18;
-  ry += (my - ry) * 0.18;
-  ring.style.transform = `translate(${rx - 15}px, ${ry - 15}px)`;
-  if (Math.abs(mx - rx) > 0.5 || Math.abs(my - ry) > 0.5) {
-    cursorRafPending = true;
-    requestAnimationFrame(updateCursor);
-  }
-}
+      /* BALLOONS */
+      if (now - balloonTimer > BALLOON_INTERVAL) {
+        spawnBalloon();
+        balloonTimer = now;
+      }
+      for (let i = balloons.length - 1; i >= 0; i--) {
+        const b = balloons[i];
+        b.y += b.vy;
+        b.x += Math.sin(now * 0.001 + i) * 0.3;
+        b.rot += b.rotV;
+        if (b.fadeIn) { b.alpha = Math.min(b.alpha + 0.03, 1); if (b.alpha >= 1) b.fadeIn = false; }
+        if (b.y < -b.w * 2) b.alpha -= 0.04;
+        if (b.alpha <= 0) { balloons.splice(i, 1); continue; }
+        drawBalloon(b);
+      }
 
-/* ── BUTTON ── */
-document.getElementById('celebrateBtn').addEventListener('click', launchConfetti);
+      /* SPARKLES */
+      for (let i = sparks.length - 1; i >= 0; i--) {
+        const s = sparks[i];
+        s.life += dt;
+        s.alpha = Math.max(0, 1 - s.life / 650);
+        if (s.alpha <= 0) { sparks.splice(i, 1); continue; }
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r * s.alpha, 0, Math.PI * 2);
+        ctx.fillStyle = s.col;
+        ctx.globalAlpha = s.alpha;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
 
-/* Auto-launch confetti on load */
-setTimeout(launchConfetti, 1400);
-</script>
+      /* CONFETTI */
+      if (confettiActive) {
+        let alive = 0;
+        for (let i = 0; i < confetti.length; i++) {
+          const c = confetti[i];
+          if (c.delay > 0) { c.delay--; continue; }
+          c.x += c.vx;
+          c.y += c.vy;
+          c.vy += 0.045;   // gravity
+          c.rot += c.rotV;
+          if (c.y > H + 20) c.alpha -= 0.05;
+          if (c.alpha <= 0) continue;
+          alive++;
+          ctx.save();
+          ctx.translate(c.x, c.y);
+          ctx.rotate(c.rot);
+          ctx.globalAlpha = c.alpha;
+          ctx.fillStyle = c.col;
+          if (c.isCircle) {
+            ctx.beginPath();
+            ctx.arc(0, 0, c.w / 2, 0, Math.PI * 2);
+            ctx.fill();
+          } else {
+            ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
+          }
+          ctx.restore();
+        }
+        if (alive === 0) confettiActive = false;
+      }
+
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+
+    /* ── SEED initial balloons ── */
+    for (let i = 0; i < 4; i++) {
+      setTimeout(() => {
+        spawnBalloon();
+        balloonTimer = performance.now();
+      }, i * 500);
+    }
+
+    /* ═══════════════════════════════════════════════
+       CURSOR — uses transform instead of left/top
+    ═══════════════════════════════════════════════ */
+    const dot = document.getElementById('cursorDot');
+    const ring = document.getElementById('cursorRing');
+    let mx = -100, my = -100, rx = -100, ry = -100;
+    let cursorRafPending = false;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX;
+      my = e.clientY;
+      addSpark(mx, my, e.timeStamp);
+      if (!cursorRafPending) {
+        cursorRafPending = true;
+        requestAnimationFrame(updateCursor);
+      }
+    }, { passive: true });
+
+    function updateCursor() {
+      cursorRafPending = false;
+      dot.style.transform = `translate(${mx - 7}px, ${my - 7}px)`;
+      rx += (mx - rx) * 0.18;
+      ry += (my - ry) * 0.18;
+      ring.style.transform = `translate(${rx - 15}px, ${ry - 15}px)`;
+      if (Math.abs(mx - rx) > 0.5 || Math.abs(my - ry) > 0.5) {
+        cursorRafPending = true;
+        requestAnimationFrame(updateCursor);
+      }
+    }
+
+    /* ── BUTTON ── */
+    document.getElementById('celebrateBtn').addEventListener('click', launchConfetti);
+
+    /* Auto-launch confetti on load */
+    setTimeout(launchConfetti, 1400);
+  </script>
 </body>
+
 </html>

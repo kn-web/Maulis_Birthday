@@ -8,28 +8,51 @@ const isPage2 = document.body.classList.contains('page-birthday');
 if (isPage1) {
 
   /* ── Messages ─────────────────────────────────────────── */
+  // const messages = [
+  //   "Hey…",
+  //   "I want to tell you something.",
+  //   "You are very special to me ❤️",
+  //   "There's no one quite like you.",
+  //   "And today… is your day.",
+  //   "So let's celebrate you. 🎂"
+  // ];
+
   const messages = [
-    "Hey…",
-    "I want to tell you something.",
-    "You are very special to me ❤️",
-    "There's no one quite like you.",
-    "And today… is your day.",
-    "So let's celebrate you. 🎂"
+    "Hey… 💫",
+    "I don’t know where to start…",
+    "But I just want to say something from my heart ❤️",
+    "You are not just special… you are *irreplaceable* ✨",
+    "In a world full of people… my eyes always search for you 👀",
+    "Your smile has a kind of magic that makes everything feel right 😊",
+    "And your presence… makes everything calm and peaceful around me… except me 😂",
+    "Yes, we’ve known each other for almost 10 years…",
+    "But honestly, it feels like I’ve truly started knowing you in the last 6–8 months ✨",
+    "Especially that courageous and ambitious girl…",
+    "That overthinking girl…",
+    "That cute, angry-bird kind of anger 😂😂❤️",
+    "And so many little things that make you… you 💖",
+    "I may not say it often…",
+    "But you truly mean a lot to me 💖",
+    "More than words… more than moments…",
+    "You are a beautiful part of my life 🌸",
+    "And today… is all about you 🎂",
+    "So just keep smiling… because you deserve all the happiness in the world 🌍",
+    "Let’s celebrate you… the amazing person you are 🎉"
   ];
 
-  const textEl   = document.getElementById('message-text');
+  const textEl = document.getElementById('message-text');
   const cursorEl = document.getElementById('cursor');
-  const btnEl    = document.getElementById('continue-btn');
+  const btnEl = document.getElementById('continue-btn');
 
-  let msgIndex  = 0;
+  let msgIndex = 0;
   let charIndex = 0;
   let isDeleting = false;
   let typingTimer;
 
-  const TYPING_SPEED  = 55;   // ms per character
-  const DELETE_SPEED  = 28;   // ms per delete
-  const PAUSE_AFTER   = 1600; // ms hold before deleting
-  const PAUSE_BEFORE  = 300;  // ms before typing next
+  const TYPING_SPEED = 55;   // ms per character
+  const DELETE_SPEED = 28;   // ms per delete
+  const PAUSE_AFTER = 2500; // ms hold before deleting
+  const PAUSE_BEFORE = 300;  // ms before typing next
 
   function typeStep() {
     const current = messages[msgIndex];
@@ -80,12 +103,12 @@ if (isPage1) {
 
   /* ── Floating particles (canvas) ─────────────────────── */
   const canvas = document.getElementById('particles');
-  const ctx    = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d');
 
   let particles = [];
 
   function resizeCanvas() {
-    canvas.width  = window.innerWidth;
+    canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
   }
   resizeCanvas();
@@ -95,12 +118,12 @@ if (isPage1) {
 
   function createParticle() {
     return {
-      x:     randomBetween(0, canvas.width),
-      y:     randomBetween(0, canvas.height),
-      r:     randomBetween(1, 2.5),
+      x: randomBetween(0, canvas.width),
+      y: randomBetween(0, canvas.height),
+      r: randomBetween(1, 2.5),
       alpha: randomBetween(0.1, 0.5),
-      vx:    randomBetween(-0.15, 0.15),
-      vy:    randomBetween(-0.3, -0.1),
+      vx: randomBetween(-0.15, 0.15),
+      vy: randomBetween(-0.3, -0.1),
       color: Math.random() < 0.5 ? '#f472b6' : '#fff'
     };
   }
@@ -166,10 +189,10 @@ if (isPage2) {
 
   /* ── Confetti ─────────────────────────────────────────── */
   const canvas = document.getElementById('confetti-canvas');
-  const ctx    = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d');
 
   function resizeCanvas() {
-    canvas.width  = window.innerWidth;
+    canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
   }
   resizeCanvas();
@@ -188,18 +211,18 @@ if (isPage2) {
   function spawnConfetti(count = 120) {
     for (let i = 0; i < count; i++) {
       pieces.push({
-        x:       randomBetween(0.1, 0.9) * canvas.width,
-        y:       randomBetween(-20, -canvas.height * 0.3),
-        w:       randomBetween(6, 11),
-        h:       randomBetween(3, 6),
-        color:   COLORS[Math.floor(Math.random() * COLORS.length)],
-        rot:     randomBetween(0, Math.PI * 2),
-        rotV:    randomBetween(-0.08, 0.08),
-        vy:      randomBetween(1.8, 3.8),
-        vx:      randomBetween(-1.2, 1.2),
-        alpha:   1,
-        decay:   randomBetween(0.006, 0.012),
-        shape:   Math.random() < 0.35 ? 'circle' : 'rect'
+        x: randomBetween(0.1, 0.9) * canvas.width,
+        y: randomBetween(-20, -canvas.height * 0.3),
+        w: randomBetween(6, 11),
+        h: randomBetween(3, 6),
+        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        rot: randomBetween(0, Math.PI * 2),
+        rotV: randomBetween(-0.08, 0.08),
+        vy: randomBetween(1.8, 3.8),
+        vx: randomBetween(-1.2, 1.2),
+        alpha: 1,
+        decay: randomBetween(0.006, 0.012),
+        shape: Math.random() < 0.35 ? 'circle' : 'rect'
       });
     }
   }
@@ -226,10 +249,10 @@ if (isPage2) {
 
       ctx.restore();
 
-      p.x   += p.vx;
-      p.y   += p.vy;
+      p.x += p.vx;
+      p.y += p.vy;
       p.rot += p.rotV;
-      p.vy  += 0.04; // gravity
+      p.vy += 0.04; // gravity
       p.alpha -= p.decay;
     });
 
